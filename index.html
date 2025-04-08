@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة فكر | اختبر معلوماتك</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f6fa;
+            color: #2c3e50;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            color: #3498db;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tagline {
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .game-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .category-selector {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .category {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .category:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .category.active {
+            background-color: #2980b9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .question-container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .question {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .timer {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #e74c3c;
+        }
+        
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .option {
+            background-color: #f1f2f6;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+        
+        .option:hover {
+            background-color: #dfe4ea;
+        }
+        
+        .option.selected {
+            border-color: #3498db;
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+        
+        .option.correct {
+            border-color: #2ecc71;
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+        
+        .option.wrong {
+            border-color: #e74c3c;
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .start-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .start-screen h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .start-screen p {
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .start-button {
+            background-color: #3498db;
+            color: white;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .start-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feedback {
+            text-align: center;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+        
+        .feedback.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .feedback.wrong {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        
+        @media (max-width: 600px) {
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .category-selector {
+                justify-content: center;
+            }
+            
+            .category {
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">فكّر</div>
+            <div class="tagline">اختبر معلوماتك وتحدى أصدقائك</div>
+        </header>
+        
+        <div class="start-screen" id="startScreen">
+            <h2>مرحباً بك في لعبة فكّر!</h2>
+            <p>تحدى نفسك واختبر معلوماتك في مختلف المجالات. اختر الإجابة الصحيحة من بين الخيارات المتاحة وحاول تحقيق أعلى النقاط!</p>
+            <button class="start-button" id="startButton">ابدأ اللعب الآن</button>
+        </div>
+        
+        <div class="game-container hidden" id="gameContainer">
+            <div class="category-selector">
+                <div class="category active" data-category="mix">منوعات</div>
+                <div class="category" data-category="science">علوم</div>
+                <div class="category" data-category="history">تاريخ</div>
+                <div class="category" data-category="geography">جغرافيا</div>
+                <div class="category" data-category="sports">رياضة</div>
+            </div>
+            
+            <div class="question-container">
+                <div class="question" id="question">جاري تحميل السؤال...</div>
+                <div class="timer" id="timer">30</div>
+            </div>
+            
+            <div class="feedback hidden" id="feedback"></div>
+            
+            <div class="options-container" id="options">
+                <div class="option" data-index="0">خيار 1</div>
+                <div class="option" data-index="1">خيار 2</div>
+                <div class="option" data-index="2">خيار 3</div>
+                <div class="option" data-index="3">خيار 4</div>
+            </div>
+            
+            <div class="controls">
+                <button id="skipButton">تخطي السؤال</button>
+                <button id="nextButton" disabled>السؤال التالي</button>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="scoreValue">0</div>
+                <div class="stat-label">النقاط</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="correctValue">0</div>
+                <div class="stat-label">إجابات صحيحة</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="wrongValue">0</div>
+                <div class="stat-label">إجابات خاطئة</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="totalValue">0</div>
+                <div class="stat-label">مجموع الأسئلة</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // قاعدة بيانات الأسئلة
+        const questionsDB = {
+            mix: [
+                {
+                    question: "ما هو أطول نهر في العالم؟",
+                    options: ["نهر النيل", "نهر الأمازون", "نهر المسيسيبي", "نهر اليانغتسي"],
+                    correctIndex: 0
+                },
+                {
+                    question: "من هو مخترع المصباح الكهربائي؟",
+                    options: ["نيكولا تيسلا", "توماس إديسون", "ألبرت أينشتاين", "غراهام بيل"],
+                    correctIndex: 1
+                },
+                {
+                    question: "ما هي عاصمة اليابان؟",
+                    options: ["سيول", "بكين", "طوكيو", "بانكوك"],
+                    correctIndex: 2
+                },
+                {
+                    question: "كم عدد أضلاع المثمن؟",
+                    options: ["6", "7", "8", "9"],
+                    correctIndex: 2
+                },
+                {
+                    question: "ما هو العنصر الكيميائي الذي رمزه Fe؟",
+                    options: ["الفضة", "الذهب", "النحاس", "الحديد"],
+                    correctIndex: 3
+                }
+            ],
+            science: [
+                {
+                    question: "ما هو العنصر الأكثر وفرة في الكون؟",
+                    options: ["الهيدروجين", "الهيليوم", "الأكسجين", "النيتروجين"],
+                    correctIndex: 0
+                },
+                {
+                    question: "ما هو الغاز الذي يستخدمه النبات في عملية التمثيل الضوئي؟",
+                    options: ["الأكسجين", "ثاني أكسيد الكربون", "النيتروجين", "الهيدروجين"],
+                    correctIndex: 1
+                },
+                {
+                    question: "كم عدد الكواكب في المجموعة الشمسية؟",
+                    options: ["7", "8", "9", "10"],
+                    correctIndex: 1
+                },
+                {
+                    question: "ما هي أصغر وحدة في الكائنات الحية؟",
+                    options: ["الجين", "النواة", "الخلية", "البروتين"],
+                    correctIndex: 2
+                },
+                {
+                    question: "ما هي وحدة قياس القوة الكهربائية؟",
+                    options: ["فولت", "أمبير", "أوم", "واط"],
+                    correctIndex: 3
+                }
+            ],
+            history: [
+                {
+                    question: "في أي عام بدأت الحرب العالمية الأولى؟",
+                    options: ["1914", "1916", "1918", "1920"],
+                    correctIndex: 0
+                },
+                {
+                    question: "من هو القائد الذي فتح مصر للمسلمين؟",
+                    options: ["خالد بن الوليد", "عمرو بن العاص", "طارق بن زياد", "صلاح الدين الأيوبي"],
+                    correctIndex: 1
+                },
+                {
+                    question: "متى تأسست منظمة الأمم المتحدة؟",
+                    options: ["1942", "1945", "1948", "1950"],
+                    correctIndex: 1
+                },
+                {
+                    question: "من هو مؤسس الدولة العباسية؟",
+                    options: ["هارون الرشيد", "المأمون", "أبو العباس السفاح", "المعتصم"],
+                    correctIndex: 2
+                },
+                {
+                    question: "في أي قرن تم اختراع الطباعة؟",
+                    options: ["القرن 13", "القرن 14", "القرن 15", "القرن 16"],
+                    correctIndex: 2
+                }
+            ],
+            geography: [
+                {
+                    question: "ما هي أكبر قارة في العالم؟",
+                    options: ["آسيا", "أفريقيا", "أمريكا الشمالية", "أوروبا"],
+                    correctIndex: 0
+                },
+                {
+                    question: "ما هو المضيق الذي يفصل بين آسيا وأمريكا الشمالية؟",
+                    options: ["مضيق جبل طارق", "مضيق بيرنغ", "مضيق البوسفور", "مضيق هرمز"],
+                    correctIndex: 1
+                },
+                {
+                    question: "ما هو أطول سلسلة جبال في العالم؟",
+                    options: ["جبال الألب", "جبال الروكي", "جبال الأنديز", "جبال الهيمالايا"],
+                    correctIndex: 2
+                },
+                {
+                    question: "ما هي أكبر دولة من حيث المساحة في العالم؟",
+                    options: ["الصين", "كندا", "الولايات المتحدة", "روسيا"],
+                    correctIndex: 3
+                },
+                {
+                    question: "ما هي الدولة التي لديها أكبر عدد من البحيرات في العالم؟",
+                    options: ["كندا", "روسيا", "الولايات المتحدة", "فنلندا"],
+                    correctIndex: 0
+                }
+            ],
+            sports: [
+                {
+                    question: "في أي رياضة يستخدم مصطلح 'الهاتريك'؟",
+                    options: ["كرة القدم", "كرة السلة", "التنس", "الهوكي"],
+                    correctIndex: 0
+                },
+                {
+                    question: "كم مرة فازت البرازيل بكأس العالم لكرة القدم؟",
+                    options: ["4 مرات", "5 مرات", "6 مرات", "7 مرات"],
+                    correctIndex: 1
+                },
+                {
+                    question: "كم عدد اللاعبين في فريق كرة السلة؟",
+                    options: ["4", "5", "6", "7"],
+                    correctIndex: 1
+                },
+                {
+                    question: "أي دولة استضافت أول كأس عالم لكرة القدم؟",
+                    options: ["البرازيل", "إيطاليا", "الأوروغواي", "الأرجنتين"],
+                    correctIndex: 2
+                },
+                {
+                    question: "من هو اللاعب الحائز على أكبر عدد من بطولات الجراند سلام في التنس؟",
+                    options: ["رافائيل نادال", "روجر فيدرر", "نوفاك ديوكوفيتش", "اندي موراي"],
+                    correctIndex: 2
+                },
+                {
+                    question: "من المنتخب الفائز في كاس العالم 2014 ؟",
+                    options: ["فرنسا","المانيا","ايطاليا","اسبانيا"],
+                    correctIndex: 1
+                }
+            ]
+        };
+        
+        // متغيرات عامة
+        let currentCategory = 'mix';
+        let currentQuestionIndex = 0;
+        let selectedOptionIndex = -1;
+        let score = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let totalQuestions = 0;
+        let timer;
+        let timeLeft = 30;
+        let currentCategoryQuestions = [...questionsDB.mix];
+        
+        // عناصر DOM
+        const startScreen = document.getElementById('startScreen');
+        const startButton = document.getElementById('startButton');
+        const gameContainer = document.getElementById('gameContainer');
+        const questionElement = document.getElementById('question');
+        const optionsContainer = document.getElementById('options');
+        const options = Array.from(document.querySelectorAll('.option'));
+        const timerElement = document.getElementById('timer');
+        const nextButton = document.getElementById('nextButton');
+        const skipButton = document.getElementById('skipButton');
+        const scoreValue = document.getElementById('scoreValue');
+        const correctValue = document.getElementById('correctValue');
+        const wrongValue = document.getElementById('wrongValue');
+        const totalValue = document.getElementById('totalValue');
+        const feedbackElement = document.getElementById('feedback');
+        const categories = document.querySelectorAll('.category');
+        
+        // بدء اللعبة
+        startButton.addEventListener('click', () => {
+            startScreen.classList.add('hidden');
+            gameContainer.classList.remove('hidden');
+            loadQuestion();
+            startTimer();
+        });
+        
+        // تغيير الفئة
+        categories.forEach(category => {
+            category.addEventListener('click', () => {
+                // تحديث الفئة النشطة
+                categories.forEach(c => c.classList.remove('active'));
+                category.classList.add('active');
+                
+                // تعيين الفئة الجديدة
+                currentCategory = category.dataset.category;
+                currentCategoryQuestions = [...questionsDB[currentCategory]];
+                shuffleArray(currentCategoryQuestions);
+                currentQuestionIndex = 0;
+                
+                // إعادة تحميل السؤال
+                resetQuestion();
+                loadQuestion();
+                resetTimer();
+                startTimer();
+            });
+        });
+        
+        // تحميل السؤال
+        function loadQuestion() {
+            if (currentCategoryQuestions.length === 0) {
+                // إعادة تحميل الأسئلة إذا انتهت
+                currentCategoryQuestions = [...questionsDB[currentCategory]];
+                shuffleArray(currentCategoryQuestions);
+                currentQuestionIndex = 0;
+            }
+            
+            const question = currentCategoryQuestions[currentQuestionIndex];
+            questionElement.textContent = question.question;
+            
+            // تحميل الخيارات
+            options.forEach((option, index) => {
+                option.textContent = question.options[index];
+                option.classList.remove('selected', 'correct', 'wrong');
+                option.addEventListener('click', selectOption);
+            });
+            
+            // إعادة تعيين حالة اللعبة
+            selectedOptionIndex = -1;
+            nextButton.disabled = true;
+            feedbackElement.classList.add('hidden');
+        }
+        
+        // اختيار الإجابة
+        function selectOption() {
+            if (selectedOptionIndex !== -1) return; // تم اختيار إجابة بالفعل
+            
+            const optionIndex = parseInt(this.dataset.index);
+            selectedOptionIndex = optionIndex;
+            
+            // تعليم الخيار المحدد
+            options.forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+            
+            // التحقق من الإجابة
+            const correctIndex = currentCategoryQuestions[currentQuestionIndex].correctIndex;
+            clearInterval(timer);
+            
+            if (optionIndex === correctIndex) {
+                // إجابة صحيحة
+                this.classList.add('correct');
+                score += Math.max(10, timeLeft);
+                correctAnswers++;
+                feedbackElement.textContent = "إجابة صحيحة! أحسنت!";
+                feedbackElement.className = "feedback correct";
+            } else {
+                // إجابة خاطئة
+                this.classList.add('wrong');
+                options[correctIndex].classList.add('correct');
+                wrongAnswers++;
+                feedbackElement.textContent = "إجابة خاطئة! حاول مرة أخرى";
+                feedbackElement.className = "feedback wrong";
+            }
+            
+            feedbackElement.classList.remove('hidden');
+            totalQuestions++;
+            updateStats();
+            nextButton.disabled = false;
+            
+            // إزالة مستمعي الأحداث
+            options.forEach(opt => opt.removeEventListener('click', selectOption));
+        }
+        
+        // زر السؤال التالي
+        nextButton.addEventListener('click', () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex >= currentCategoryQuestions.length) {
+                currentQuestionIndex = 0;
+                shuffleArray(currentCategoryQuestions);
+            }
+            resetQuestion();
+            loadQuestion();
+            resetTimer();
+            startTimer();
+        });
+        
+        // زر تخطي السؤال
+        skipButton.addEventListener('click', () => {
+            totalQuestions++;
+            wrongAnswers++;
+            updateStats();
+            
+            currentQuestionIndex++;
+            if (currentQuestionIndex >= currentCategoryQuestions.length) {
+                currentQuestionIndex = 0;
+                shuffleArray(currentCategoryQuestions);
+            }
+            resetQuestion();
+            loadQuestion();
+            resetTimer();
+            startTimer();
+        });
+        
+        // بدء المؤقت
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    // تحديد الإجابة الصحيحة
+                    const correctIndex = currentCategoryQuestions[currentQuestionIndex].correctIndex;
+                    options[correctIndex].classList.add('correct');
+                    
+                    // تحديث الإحصائيات
+                    totalQuestions++;
+                    wrongAnswers++;
+                    updateStats();
+                    
+                    // تعطيل الخيارات
+                    options.forEach(opt => opt.removeEventListener('click', selectOption));
+                    
+                    // إظهار الملاحظات
+                    feedbackElement.textContent = "انتهى الوقت! حاول مرة أخرى";
+                    feedbackElement.className = "feedback wrong";
+                    feedbackElement.classList.remove('hidden');
+                    
+                    // تمكين زر التالي
+                    nextButton.disabled = false;
+                }
+            }, 1000);
+        }
+        
+        // إعادة تعيين المؤقت
+        function resetTimer() {
+            clearInterval(timer);
+            timeLeft = 30;
+            timerElement.textContent = timeLeft;
+        }
+        
+        // إعادة تعيين السؤال
+        function resetQuestion() {
+            options.forEach(option => {
+                option.classList.remove('selected', 'correct', 'wrong');
+            });
+            selectedOptionIndex = -1;
+            nextButton.disabled = true;
+            feedbackElement.classList.add('hidden');
+        }
+        
+        // تحديث الإحصائيات
+        function updateStats() {
+            scoreValue.textContent = score;
+            correctValue.textContent = correctAnswers;
+            wrongValue.textContent = wrongAnswers;
+            totalValue.textContent = totalQuestions;
+        }
+        
+        // خلط المصفوفة
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        // خلط الأسئلة في البداية
+        shuffleArray(currentCategoryQuestions);
+    </script>
+</body>
+</html>
